@@ -13,7 +13,7 @@ const App = () => {
         return response.json();
       })
       .then((data) => {
-        setItems(data.slice(0, 10)); // show only 10 items
+        setItems(data.slice(0, 8)); 
         setLoading(false);
       })
       .catch((err) => {
