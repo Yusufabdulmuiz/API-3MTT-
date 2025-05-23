@@ -1,14 +1,37 @@
-import { useState } from 'react'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import ListComponent from './ListComponent';
 
-function App() {
-  const [count, setCount] = useState(0);
-  const
+const App = () => {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then((response) => {
+        if (!response.ok) throw new Error('Failed to fetch');
+        return response.json();
+      })
+      .then((data) => {
+        setItems(data.slice(0, 10)); // show only 10 items
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <>
-    </>
-  )
-}
+    <div>
+      <h1>Post List</h1>
+      <ListComponent items={items} renderItem={(item) => <li key={item.id}>{item.title}</li>} />
+    </div>
+  );
+};
 
-export default App
+export default App;
+
